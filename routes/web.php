@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
+
+use App\Http\Controllers\AllRole\SalesController as ShowSalesController;
+
+use App\Http\Controllers\Admin\SalesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,3 +19,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('/', 'welcome')->name('home');
+
+Route::get('/login', [LoginController::class, 'index'])->name('login');
+
+Route::get('/admin/sales', [SalesController::class, 'index'])->name('admin.sales');
+
+Route::get('/{username_sales}', [ShowSalesController::class, 'index'])->name('show.sales');

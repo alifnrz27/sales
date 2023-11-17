@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\AuthController;
 
+use App\Http\Controllers\API\AllRole\SalesController as AllRoleSalesController;
+
 use App\Http\Controllers\API\Admin\SalesController;
 
 
@@ -20,8 +22,10 @@ use App\Http\Controllers\API\Admin\SalesController;
 
 Route::group(['middleware' => ['api', 'secret'], 'prefix' => 'v1', 'as' => 'api.'], function () {
     Route::post('authenticate', [AuthController::class, 'authenticate'])->name('authenticate');
+    Route::post('submit-phone-number/{sales_username}', [AllRoleSalesController::class, 'submitPhoneNumber'])->name('submit.phone-number');
+    Route::post('{sales_username}', [AllRoleSalesController::class, 'show'])->name('get.sales');
 
-    Route::group(['middleware' => ['jwtToken', 'auth', 'admin', 'verified'], 'prefix' => 'admin', 'as' => 'admin.',], function () {
+    Route::group(['middleware' => ['jwtToken', 'admin', 'verified'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
         // Sales management
         Route::group(['prefix' => 'sales', 'as' => 'sales.',], function () {
             Route::get('', [SalesController::class, 'index'])->name('get');

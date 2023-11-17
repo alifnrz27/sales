@@ -1,0 +1,128 @@
+[x-cloak] { display: none !important; }
+
+/* Hide the scrollbar */
+.scroll-container {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch; /* Optional for smooth scrolling on iOS */
+}
+
+/* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+.scroll-container::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+/* Optional: Style the scrollbar thumb (for WebKit browsers) */
+.scroll-container::-webkit-scrollbar-thumb {
+    background-color: transparent;
+}
+
+/* Hide the scrollbar for webkit browsers (Chrome, Safari, Opera) */
+::-webkit-scrollbar {
+    width: 0.5em; /* Adjust this width to hide the scrollbar entirely */
+  }
+
+  /* Optional: Add a background color to the scrollbar track */
+  ::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+  }
+
+  /* Optional: Style the scrollbar thumb */
+  ::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 0.25em;
+  }
+/* Hide the scrollbar for Firefox */
+body {
+    scrollbar-width: none;
+  }
+
+  /* Untuk menyembunyikan scroll bar pada browser Chrome, Safari, dan Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Untuk menyembunyikan scroll bar pada browser Firefox */
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-select {
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Standard syntax */
+}
+
+
+.form-group {
+    position: relative;
+
+  }
+
+  .form-group input {
+    border: none;
+    width: 100%;
+    padding: 10px;
+    outline: none;
+  }
+
+  .form-group input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.no-outline:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+  .form-group label {
+    padding-left: 12px;
+    padding-right: 12px;
+    color: #9AA0A6;
+    font-size: 16px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    transition: 0.2s;
+    transform-origin: 0 0;
+  }
+
+  .form-group input:focus + label,
+  .form-group input:valid + label {
+    color: #9AA0A6;
+    top:10px;
+    font-size: 12px;
+    transform: translateY(-100%) scale(0.8);
+    color: #333;
+  }
+
+
+  @media (min-width: 768px) {
+    .max-zero {
+        max-width: 0;
+    }
+}
+
+.max-400 {
+    max-width: 400px;
+}
+
+.outline-gray {
+    outline: #888 !important;
+    border: 2px solid #D6DADF !important;
+}
+.outline-gray:focus {
+    outline: #888 !important;
+    border: 2px solid #D6DADF !important;
+}
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* background: url('path/to/your-custom-icon.png') no-repeat right center;
+    padding-right: 20px; Sesuaikan ukuran sesuai dengan ikon Anda */
+}

@@ -17,7 +17,7 @@ class SecretMiddleware
     {
         $headerSecretJWT = $request->header('secret');
 
-            if ($headerSecretJWT !== env('JWT_SECRET')) {
+            if (base64_decode($headerSecretJWT) !== env('JWT_SECRET')) {
                 return response()->json([
                     'message' => 'Secret not valid',
                 ], 403);

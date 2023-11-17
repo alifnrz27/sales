@@ -5,7 +5,10 @@ namespace App\Http\Controllers\API\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\UserAccessLog;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class SalesController extends Controller
 {
@@ -28,7 +31,7 @@ class SalesController extends Controller
     public function show($uuid){
         try{
             $sales = User::
-            select('uuid', 'name', 'role', 'email', 'image_path')->where(['role' => 'Sales', 'uuid' => $uuid])->first();
+            select('uuid', 'name', 'username', 'role', 'email', 'image_path', 'facebook', 'instagram', 'whatsapp')->where(['role' => 'Sales', 'uuid' => $uuid])->first();
 
             if(!$sales){
                 return response()->json([
@@ -37,7 +40,7 @@ class SalesController extends Controller
             }
             return response()->json([
                 'message' => 'Success get data',
-                'sales' => $sales,
+                'user' => $sales,
             ], 200);
         }
         catch(\Exception $e){
@@ -69,10 +72,13 @@ class SalesController extends Controller
                 ], 422);
             }
 
-            $path = $request->image->store('sales', 'public');
-
-            if($request->image){
-                $validate['image'] = 'required';
+            if(substr($request->image, 0, 4) == "data"){
+                $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->image));
+                $pathToSave = storage_path('app/public/sales'); // Ganti dengan direktori yang sesuai
+                $imageName = uniqid() . '.png'; // Nama file unik dengan ekstensi .png
+                $imagePath = $pathToSave . '/' . $imageName;
+                $path = "sales/".$imageName;
+                file_put_contents($imagePath, $imageData);
             }
 
             $sales = User::
@@ -90,7 +96,7 @@ class SalesController extends Controller
 
             return response()->json([
                 'message' => 'Success create new data',
-                'sales' => [
+                'user' => [
                     'name' => $sales->name,
                     'username' => $sales->username,
                     'email' => $sales->email,
@@ -152,13 +158,17 @@ class SalesController extends Controller
             }
 
             $path = $getUser->image_path;
-            if(!is_string($request->image)){
-                if (File::exists(public_path('storage/'.$getUser->image))) {
-                    File::delete(public_path('storage/'.$getUser->image));
+            if(substr($request->image, 0, 4) == "data"){
+                if (File::exists(public_path('storage/'.$getUser->image_path))) {
+                    File::delete(public_path('storage/'.$getUser->image_path));
                 }
-                $path = $request->image->store('sales', 'public');
+                $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->image));
+                $pathToSave = storage_path('app/public/sales'); // Ganti dengan direktori yang sesuai
+                $imageName = uniqid() . '.png'; // Nama file unik dengan ekstensi .png
+                $imagePath = $pathToSave . '/' . $imageName;
+                $path = "sales/".$imageName;
+                file_put_contents($imagePath, $imageData);
             }
-
 
             User::where(['uuid' => $uuid])
             ->update([
@@ -192,6 +202,18 @@ class SalesController extends Controller
     }
 
     public function delete($uuid){
+        $getUser = User::where([
+            'uuid' => $uuid,
+        ])->first();
+
+        if (File::exists(public_path('storage/'.$getUser->image_path))) {
+            File::delete(public_path('storage/'.$getUser->image_path));
+        }
+
+        UserAccessLog::where([
+            'sales_uuid' => $getUser->uuid,
+        ])->delete();
+
         User::where([
             'uuid' => $uuid,
         ])->delete();
