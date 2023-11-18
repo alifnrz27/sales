@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+    <x-layouts.header />
+
     <div class="w-screen h-screen max-h-screen overflow-hidden bg-white" x-data="{form_create_sales:false, table_sales:true, open_confirm:false}">
         <div style="margin-top:-33px; z-index:50;left:0;overflow: auto;" class="fixed w-screen h-full">
             <form>
@@ -272,82 +274,84 @@
                     cancelButtonColor: '#3085d6',
                     confirmButtonText: 'Yes'
                 }).then((result) => {
-                    // Mengambil data formulir
-                    var formData = new FormData();
-                    formData.append('image', $("#salesImageCropped").val());
-                    formData.append('name', $("#name").val());
-                    formData.append('username', $("#username").val());
-                    formData.append('email', $("#email").val());
-                    formData.append('password', $("#password").val());
-                    formData.append('whatsapp', $("#whatsapp").val());
-                    formData.append('instagram', $("#instagram").val());
-                    formData.append('facebook', $("#facebook").val());
+                    if (result.isConfirmed) {
+                        // Mengambil data formulir
+                        var formData = new FormData();
+                        formData.append('image', $("#salesImageCropped").val());
+                        formData.append('name', $("#name").val());
+                        formData.append('username', $("#username").val());
+                        formData.append('email', $("#email").val());
+                        formData.append('password', $("#password").val());
+                        formData.append('whatsapp', $("#whatsapp").val());
+                        formData.append('instagram', $("#instagram").val());
+                        formData.append('facebook', $("#facebook").val());
 
-                    // Mengirim data menggunakan AJAX
-                    $.ajax({
-                        type: "POST",
-                        url: '{{ env('APP_URL').'/api/v1/profile/update' }}',
-                        data: formData,
-                        contentType: false,  // Biarkan jQuery menangani tipe konten
-                        processData: false,  // Biarkan jQuery tidak memproses FormData
-                        headers: {
-                            "secret": '{{ base64_encode(env('JWT_SECRET')) }}',
-                            "Authorization": "Bearer " + Cookies.get('sales_access_token')
-                        },
-                        success: function(response) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Your data updated successfully.',
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    location.reload();
+                        // Mengirim data menggunakan AJAX
+                        $.ajax({
+                            type: "POST",
+                            url: '{{ env('APP_URL').'/api/v1/profile/update' }}',
+                            data: formData,
+                            contentType: false,  // Biarkan jQuery menangani tipe konten
+                            processData: false,  // Biarkan jQuery tidak memproses FormData
+                            headers: {
+                                "secret": '{{ base64_encode(env('JWT_SECRET')) }}',
+                                "Authorization": "Bearer " + Cookies.get('sales_access_token')
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: 'Your data updated successfully.',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+                            },
+                            error: function(error) {
+                                if(error.responseJSON.errors.image){
+                                    $('#profile-image-error').text(error.responseJSON.errors.image[0]);
+                                }else{
+                                    $('#profile-image-error').text("");
                                 }
-                            });
-                        },
-                        error: function(error) {
-                            if(error.responseJSON.errors.image){
-                                $('#profile-image-error').text(error.responseJSON.errors.image[0]);
-                            }else{
-                                $('#profile-image-error').text("");
+                                if(error.responseJSON.errors.name){
+                                    $('#name-error').text(error.responseJSON.errors.name[0]);
+                                }else{
+                                    $('#name-error').text("");
+                                }
+                                if(error.responseJSON.errors.username){
+                                    $('#username-error').text(error.responseJSON.errors.username[0]);
+                                }else{
+                                    $('#username-error').text("");
+                                }
+                                if(error.responseJSON.errors.instagram){
+                                    $('#instagram-error').text(error.responseJSON.errors.instagram[0]);
+                                }else{
+                                    $('#instagram-error').text("");
+                                }
+                                if(error.responseJSON.errors.whatsapp){
+                                    $('#whatsapp-error').text(error.responseJSON.errors.whatsapp[0]);
+                                }else{
+                                    $('#whatsapp-error').text("");
+                                }
+                                if(error.responseJSON.errors.facebook){
+                                    $('#facebook-error').text(error.responseJSON.errors.facebook[0]);
+                                }else{
+                                    $('#facebook-error').text("");
+                                }
+                                if(error.responseJSON.errors.email){
+                                    $('#email-error').text(error.responseJSON.errors.email[0]);
+                                }else{
+                                    $('#email-error').text("");
+                                }
+                                if(error.responseJSON.errors.password){
+                                    $('#password-error').text(error.responseJSON.errors.password[0]);
+                                }else{
+                                    $('#password-error').text("");
+                                }
                             }
-                            if(error.responseJSON.errors.name){
-                                $('#name-error').text(error.responseJSON.errors.name[0]);
-                            }else{
-                                $('#name-error').text("");
-                            }
-                            if(error.responseJSON.errors.username){
-                                $('#username-error').text(error.responseJSON.errors.username[0]);
-                            }else{
-                                $('#username-error').text("");
-                            }
-                            if(error.responseJSON.errors.instagram){
-                                $('#instagram-error').text(error.responseJSON.errors.instagram[0]);
-                            }else{
-                                $('#instagram-error').text("");
-                            }
-                            if(error.responseJSON.errors.whatsapp){
-                                $('#whatsapp-error').text(error.responseJSON.errors.whatsapp[0]);
-                            }else{
-                                $('#whatsapp-error').text("");
-                            }
-                            if(error.responseJSON.errors.facebook){
-                                $('#facebook-error').text(error.responseJSON.errors.facebook[0]);
-                            }else{
-                                $('#facebook-error').text("");
-                            }
-                            if(error.responseJSON.errors.email){
-                                $('#email-error').text(error.responseJSON.errors.email[0]);
-                            }else{
-                                $('#email-error').text("");
-                            }
-                            if(error.responseJSON.errors.password){
-                                $('#password-error').text(error.responseJSON.errors.password[0]);
-                            }else{
-                                $('#password-error').text("");
-                            }
-                        }
-                    });
+                        });
+                    }
                 });
             }
 

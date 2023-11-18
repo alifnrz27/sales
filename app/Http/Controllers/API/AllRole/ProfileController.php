@@ -102,6 +102,12 @@ class ProfileController extends Controller
                 $validated['password'] = bcrypt($request->password);
             }
 
+            if($getUser->role == "Sales"){
+                if($request->whatsapp != $getUser->whatsapp){
+                    $validated["role"] = "-";
+                }
+            }
+
             User::
             where(['uuid' => $getUser->uuid])
             ->update($validated);

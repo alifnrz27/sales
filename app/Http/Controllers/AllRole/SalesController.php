@@ -11,6 +11,7 @@ class SalesController extends Controller
     public function index($username){
         $data['sales'] = User::where([
             'username' => $username,
+            "role" => "Sales",
         ])->first();
 
         if(!$data['sales']){

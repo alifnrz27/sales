@@ -56,6 +56,27 @@
     </div>
 
     <script>
+        $(document).ready(function() {
+            $.ajax({
+                type: 'GET',
+                url: '{{ env('APP_URL').'/api/v1/check-authenticate' }}',
+                headers: {
+                    "secret": '{{ base64_encode(env('JWT_SECRET')) }}',
+                    "Authorization": "Bearer " + Cookies.get('sales_access_token')
+                },
+                success: function(response) {
+                    if(response.redirectTo == "Admin"){
+                        window.location.href = '{{ route("admin.sales") }}';
+                    }else{
+                        window.location.href = '{{ route("profile") }}';
+                    }
+                },
+                error: function(error) {
+                    //
+                }
+            });
+        });
+
         function login() {
             // Mengambil data formulir
             var formData = {
@@ -79,7 +100,7 @@
                     if(response.user.role == "Admin"){
                         window.location.href = '{{ route("admin.sales") }}';
                         return
-                    }if(response.user.role == "Sales"){
+                    }else{
                         window.location.href = '{{ route("profile") }}';
                         return
                     }

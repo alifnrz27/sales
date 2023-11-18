@@ -23,6 +23,10 @@ use App\Http\Controllers\API\Admin\SalesController;
 Route::group(['middleware' => ['api', 'secret'], 'prefix' => 'v1', 'as' => 'api.'], function () {
     Route::post('authenticate', [AuthController::class, 'authenticate'])->name('authenticate');
 
+    Route::group(['middleware' => ['jwtToken']], function () {
+        Route::get('check-authenticate', [AuthController::class, 'checkAuthenticate'])->name('authenticate.check');
+    });
+
     Route::group(['middleware' => ['jwtToken', 'verified']], function () {
 
         Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
@@ -32,6 +36,9 @@ Route::group(['middleware' => ['api', 'secret'], 'prefix' => 'v1', 'as' => 'api.
             // Sales management
             Route::group(['prefix' => 'sales', 'as' => 'sales.',], function () {
                 Route::get('', [SalesController::class, 'index'])->name('get');
+                Route::get('confirm', [SalesController::class, 'showConfirm'])->name('get.confirm');
+                Route::get('confirm/{sales_uuid}', [SalesController::class, 'showSpesificConfirm'])->name('get.sales.confirm');
+                Route::post('confirm/{sales_uuid}', [SalesController::class, 'salesConfirm'])->name('store.confirm');
                 Route::get('{sales_uuid}', [SalesController::class, 'show'])->name('show');
                 Route::post('', [SalesController::class, 'store'])->name('store');
                 Route::post('{sales_uuid}', [SalesController::class, 'update'])->name('update');

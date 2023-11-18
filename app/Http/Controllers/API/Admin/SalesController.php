@@ -28,6 +28,50 @@ class SalesController extends Controller
         }
     }
 
+    public function showConfirm(){
+        try{
+            $sales = User::
+            select('uuid', 'name')->where(['role' => '-'])->get();
+            return response()->json([
+                'message' => 'Success get data',
+                'sales' => $sales,
+            ], 200);
+        }
+        catch(\Exception $e){
+            return response()->json([
+                'message' => $e,
+            ], 404);
+        }
+    }
+
+    public function showSpesificConfirm($uuid){
+        try{
+            $sales = User::
+            select('uuid', 'name', "image_path", "email", "username", "whatsapp", "instagram", "facebook")->where(["uuid" => $uuid])->first();
+            return response()->json([
+                'message' => 'Success get data',
+                'sales' => $sales,
+            ], 200);
+        }
+        catch(\Exception $e){
+            return response()->json([
+                'message' => $e,
+            ], 404);
+        }
+    }
+
+    public function salesConfirm($sales_uuid){
+        User::where([
+            'uuid' => $sales_uuid,
+        ])->update([
+            'role' => 'Sales'
+        ]);
+
+        return response()->json([
+            'message' => "Data updated"
+        ]);
+    }
+
     public function show($uuid){
         try{
             $sales = User::

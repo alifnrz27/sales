@@ -9,6 +9,8 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 
+use App\Models\User;
+
 class AuthController extends Controller
 {
     public function authenticate(Request $request){
@@ -42,5 +44,19 @@ class AuthController extends Controller
             'token_type'   => 'bearer',
         ]);
 
+    }
+
+    public function checkAuthenticate(){
+        $user = JWTAuth::parseToken()->authenticate();
+
+            $getUser = User::
+            where([
+                'uuid' => $user->uuid,
+            ])->first();
+
+        return response()->json([
+            'message' => 'User already log in',
+            'redirectTo' => $getUser->role,
+        ],200);
     }
 }
