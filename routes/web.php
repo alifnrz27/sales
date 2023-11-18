@@ -19,7 +19,9 @@ use App\Http\Controllers\Admin\SalesController;
 |
 */
 
-Route::view('/', 'welcome')->name('home');
+Route::get('/', function(){
+    return redirect(route('login'));
+})->name('home');
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 
