@@ -81,6 +81,17 @@ class SalesController extends Controller
                 file_put_contents($imagePath, $imageData);
             }
 
+            $cleanedNumber = preg_replace('/[^0-9]/', '', $request->whatsapp);
+
+            // Menambahkan awalan + jika belum dimulai dengan +
+            if (substr($cleanedNumber, 0, 1) !== '+') {
+                // Menghapus angka 0 di depan jika ada
+                $cleanedNumber = ltrim($cleanedNumber, '0');
+
+                // Menambahkan awalan +62
+                $cleanedNumber = '+62' . $cleanedNumber;
+            }
+
             $sales = User::
             create([
                 'name' => $request->name,
@@ -89,7 +100,7 @@ class SalesController extends Controller
                 'email' => $request->email,
                 'image_path' => $path,
                 'password' => bcrypt($request->password),
-                'whatsapp' => $request->whatsapp,
+                'whatsapp' => $cleanedNumber,
                 'instagram' => $request->instagram,
                 'facebook' => $request->facebook,
                 ]);
@@ -170,13 +181,24 @@ class SalesController extends Controller
                 file_put_contents($imagePath, $imageData);
             }
 
+            $cleanedNumber = preg_replace('/[^0-9]/', '', $request->whatsapp);
+
+            // Menambahkan awalan + jika belum dimulai dengan +
+            if (substr($cleanedNumber, 0, 1) !== '+') {
+                // Menghapus angka 0 di depan jika ada
+                $cleanedNumber = ltrim($cleanedNumber, '0');
+
+                // Menambahkan awalan +62
+                $cleanedNumber = '+62' . $cleanedNumber;
+            }
+
             User::where(['uuid' => $uuid])
             ->update([
                 'name' => $request->name,
                 'username' => $request->username,
                 'email' => $request->email,
                 'image_path' => $path,
-                'whatsapp' => $request->whatsapp,
+                'whatsapp' => $cleanedNumber,
                 'instagram' => $request->instagram,
                 'facebook' => $request->facebook,
                 ]);

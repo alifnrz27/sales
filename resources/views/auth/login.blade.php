@@ -79,6 +79,9 @@
                     if(response.user.role == "Admin"){
                         window.location.href = '{{ route("admin.sales") }}';
                         return
+                    }if(response.user.role == "Sales"){
+                        window.location.href = '{{ route("profile") }}';
+                        return
                     }
                     console.log(response.access_token);
                     // Handle response dari server jika diperlukan
