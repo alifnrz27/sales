@@ -106,7 +106,7 @@ class RegisterController extends Controller
                 return response()->json([
                     'message' => 'Redirect',
                     'dataCookie' => "userLog->user_cookie",
-                    'username' => "checkReferenceSales->username",
+                    'username' => $checkReferenceSales->username,
                 ], 200);
             $userLog = UserAccessLog::create([
                 'phone_number' => $cleanedNumber,
