@@ -132,6 +132,23 @@ class SalesController extends Controller
                 ], 422);
             }
 
+            $cleanedNumber = preg_replace('/[^0-9]/', '', $request->whatsapp);
+
+            $checkPhoneNumber = User::where([
+                'whatsapp' => $cleanedNumber,
+            ])->first();
+
+            if($checkPhoneNumber){
+                return response()->json([
+                    'message' => 'Validation failed',
+                    'errors' => [
+                        'whatsapp'=> [
+                            'The number already taken'
+                        ]
+                    ],
+                ], 422);
+            }
+
             if(substr($request->image, 0, 4) == "data"){
                 $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->image));
                 $pathToSave = storage_path('app/public/sales'); // Ganti dengan direktori yang sesuai
@@ -150,7 +167,7 @@ class SalesController extends Controller
                 ], 422);
             }
 
-            $cleanedNumber = preg_replace('/[^0-9]/', '', $request->whatsapp);
+
 
             // Menambahkan awalan + jika belum dimulai dengan +
             if (substr($cleanedNumber, 0, 1) !== '+') {
@@ -240,6 +257,25 @@ class SalesController extends Controller
                 ], 422);
             }
 
+
+            $cleanedNumber = preg_replace('/[^0-9]/', '', $request->whatsapp);
+            if($request->whatsapp != $getUser->whatsapp){
+                $checkPhoneNumber = User::where([
+                    'whatsapp' => $cleanedNumber,
+                ])->first();
+                if($checkPhoneNumber){
+                    return response()->json([
+                        'message' => 'Validation failed',
+                        'errors' => [
+                            'whatsapp'=> [
+                                'The number already taken'
+                            ]
+                        ],
+                    ], 422);
+                }
+            }
+
+
             $path = $getUser->image_path;
             if(substr($request->image, 0, 4) == "data"){
                 if (File::exists(public_path('storage/'.$getUser->image_path))) {
@@ -252,8 +288,6 @@ class SalesController extends Controller
                 $path = "sales/".$imageName;
                 file_put_contents($imagePath, $imageData);
             }
-
-            $cleanedNumber = preg_replace('/[^0-9]/', '', $request->whatsapp);
 
             // Menambahkan awalan + jika belum dimulai dengan +
             if (substr($cleanedNumber, 0, 1) !== '+') {
