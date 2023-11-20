@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\AuthController;
 
 use App\Http\Controllers\API\AllRole\SalesController as AllRoleSalesController;
+use App\Http\Controllers\API\AllRole\RegisterController;
 use App\Http\Controllers\API\AllRole\ProfileController;
 use App\Http\Controllers\API\Admin\SalesController;
 
@@ -22,6 +23,7 @@ use App\Http\Controllers\API\Admin\SalesController;
 
 Route::group(['middleware' => ['api', 'secret'], 'prefix' => 'v1', 'as' => 'api.'], function () {
     Route::post('authenticate', [AuthController::class, 'authenticate'])->name('authenticate');
+    Route::post('register', [RegisterController::class, 'store'])->name('register.sales');
 
     Route::group(['middleware' => ['jwtToken']], function () {
         Route::get('check-authenticate', [AuthController::class, 'checkAuthenticate'])->name('authenticate.check');

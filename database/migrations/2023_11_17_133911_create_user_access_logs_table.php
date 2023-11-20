@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('user_access_logs', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid');
+            $table->string('user_uuid');
             $table->string('user_cookie');
             $table->string('sales_uuid');
             $table->string('phone_number');

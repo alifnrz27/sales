@@ -9,6 +9,7 @@ use App\Models\UserAccessLog;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class SalesController extends Controller
 {
@@ -31,7 +32,7 @@ class SalesController extends Controller
     public function showConfirm(){
         try{
             $sales = User::
-            select('uuid', 'name')->where(['role' => '-'])->get();
+            select('uuid', 'name')->where(['role' => 'Sales Pending'])->get();
             return response()->json([
                 'message' => 'Success get data',
                 'sales' => $sales,
@@ -66,6 +67,21 @@ class SalesController extends Controller
         ])->update([
             'role' => 'Sales'
         ]);
+
+        $user = User::where([
+            'uuid' => $sales_uuid,
+        ])->first();
+
+        $log = UserAccessLog::
+        where([
+            'user_uuid' => $user->uuid
+        ])
+        ->update([
+            'phone_number' => $user->whatsapp,
+            'sales_uuid' => $user->uuid,
+        ]);
+
+        return $log;
 
         return response()->json([
             'message' => "Data updated"
@@ -123,6 +139,15 @@ class SalesController extends Controller
                 $imagePath = $pathToSave . '/' . $imageName;
                 $path = "sales/".$imageName;
                 file_put_contents($imagePath, $imageData);
+            }else{
+                return response()->json([
+                    'message' => 'Validation failed',
+                    'errors' => [
+                        "image" => [
+                            "Image not valid"
+                        ],
+                    ],
+                ], 422);
             }
 
             $cleanedNumber = preg_replace('/[^0-9]/', '', $request->whatsapp);
@@ -136,6 +161,8 @@ class SalesController extends Controller
                 $cleanedNumber = '+62' . $cleanedNumber;
             }
 
+            $user = JWTAuth::parseToken()->authenticate();
+
             $sales = User::
             create([
                 'name' => $request->name,
@@ -147,6 +174,7 @@ class SalesController extends Controller
                 'whatsapp' => $cleanedNumber,
                 'instagram' => $request->instagram,
                 'facebook' => $request->facebook,
+                'reference_sales_uuid' => $user->uuid,
                 ]);
 
             return response()->json([

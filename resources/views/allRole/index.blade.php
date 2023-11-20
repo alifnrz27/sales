@@ -316,11 +316,10 @@
                         "secret": '{{ base64_encode(env('JWT_SECRET')) }}'
                     },
                     success: function(response) {
-                        console.log(response.message)
-                        setCookie('sales-web-cookie', response.dataCookie, 100);
-                        if(response.message == "Success add phone number"){
-                            document.getElementById('phone-number-form').classList.add('hidden')
+                        if(response.message == "Register"){
+                            window.location.href = '{{ env('APP_URL')."/register?reference_sales_uuid=" }}' + response.reference_sales_uuid
                         }else if(response.message == "Redirect"){
+                            setCookie('sales-web-cookie', response.dataCookie, 100);
                             window.location.href = '{{ env('APP_URL')."/" }}' + response.username
                         }
                     },

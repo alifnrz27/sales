@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 
 use App\Http\Controllers\AllRole\SalesController as ShowSalesController;
 use App\Http\Controllers\AllRole\ProfileController;
@@ -24,6 +25,7 @@ Route::get('/', function(){
 })->name('home');
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::get('/register', [RegisterController::class, 'index'])->name('register');
 
 Route::get('/admin/sales', [SalesController::class, 'index'])->name('admin.sales');
 

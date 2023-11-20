@@ -35,6 +35,7 @@ class User extends Authenticatable implements JWTSubject
         'whatsapp',
         'instagram',
         'facebook',
+        'reference_sales_uuid',
     ];
     /**
      * The attributes that should be hidden for serialization.

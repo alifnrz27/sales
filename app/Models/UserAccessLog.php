@@ -14,6 +14,7 @@ class UserAccessLog extends Model
     protected $primaryKey = 'uuid'; // Name of the UUID column
 
     protected $fillable = [
+        'user_uuid',
         'user_cookie',
         'sales_uuid',
         'phone_number',
