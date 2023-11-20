@@ -104,23 +104,12 @@ class RegisterController extends Controller
                 'reference_sales_uuid' => $checkReferenceSales->uuid,
                 ]);
 
-            // $userLog = UserAccessLog::create([
-            //     'phone_number' => $cleanedNumber,
-            //     'user_uuid' => $sales->uuid,
-            //     'sales_uuid' => $checkReferenceSales->uuid,
-            //     'user_cookie' => Uuid::uuid4()->toString()
-            // ]);
-
-            return response()->json([
-                'message' => 'Redirect',
-                'dataCookie' => json_encode([
-                    'phone_number' => $cleanedNumber,
-                    'user_uuid' => $sales->uuid,
-                    'sales_uuid' => $checkReferenceSales->uuid,
-                    'user_cookie' => Uuid::uuid4()->toString()
-                ]),
-                'username' => $checkReferenceSales->username,
-            ], 200);
+            $userLog = UserAccessLog::create([
+                'phone_number' => $cleanedNumber,
+                'user_uuid' => $sales->uuid,
+                'sales_uuid' => $checkReferenceSales->uuid,
+                'user_cookie' => Uuid::uuid4()->toString()
+            ]);
 
             return response()->json([
                 'message' => 'Redirect',
