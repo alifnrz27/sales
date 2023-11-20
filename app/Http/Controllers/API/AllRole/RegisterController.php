@@ -103,7 +103,11 @@ class RegisterController extends Controller
                 'facebook' => $request->facebook,
                 'reference_sales_uuid' => $checkReferenceSales->uuid,
                 ]);
-
+                return response()->json([
+                    'message' => 'Redirect',
+                    'dataCookie' => "userLog->user_cookie",
+                    'username' => "checkReferenceSales->username",
+                ], 200);
             $userLog = UserAccessLog::create([
                 'phone_number' => $cleanedNumber,
                 'user_uuid' => $sales->uuid,
