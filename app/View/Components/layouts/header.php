@@ -11,9 +11,12 @@ class header extends Component
     /**
      * Create a new component instance.
      */
+    public $sales_uuid;
     public function __construct()
     {
         //
+
+        // $this->sales_uuid = $sales_uuid;
     }
 
     /**

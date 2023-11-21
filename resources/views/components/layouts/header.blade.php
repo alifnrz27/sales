@@ -14,6 +14,11 @@
                         <span>LOGIN</span>
                     </a>
                 </div>
+                <div id="register-button" class="hidden" style=" flex: 1 1 auto; text-align: right;">
+                    <a href="{{ route('register') }}?reference_sales_uuid={{ $sales->uuid }}" class="btn-profile" style="color: white; background-color: rgb(59 130 246 / var(--tw-bg-opacity));display: inline-flex; padding-left: 1rem; padding-right: 1rem;">
+                        <span>Register</span>
+                    </a>
+                </div>
                 <div id="logout-button" class="hidden" style=" flex: 1 1 auto; text-align: right;">
                     <div onclick="logout()" class="btn-profile hidden no-select cursor-pointer" style="color: white; background-color: rgb(239 68 68 / var(--tw-bg-opacity));display: inline-flex; padding-left: 1rem; padding-right: 1rem;">
                         <span>LOGOUT</span>
@@ -31,15 +36,30 @@
                 url: '{{ env('APP_URL').'/api/v1/check-authenticate' }}',
                 headers: {
                     "secret": '{{ base64_encode(env('JWT_SECRET')) }}',
-                    "Authorization": "Bearer " + Cookies.get('sales_access_token')
+                    "Authorization": "Bearer " + Cookies.get('sales_access_token'),
+                    "sales-web-cookie": Cookies.get('sales-web-cookie'),
                 },
                 success: function(response) {
-                    document.getElementById('login-button').classList.add('hidden')
-                    document.getElementById('logout-button').classList.remove('hidden')
+                    console.log(response)
+                    if(response.message == 'User need to log in'){
+                        document.getElementById('login-button').classList.remove('hidden')
+                        document.getElementById('logout-button').classList.add('hidden')
+                        document.getElementById('register-button').classList.add('hidden')
+                    }else if(response.message == 'Cookie not found'){
+                        document.getElementById('login-button').classList.add('hidden')
+                        document.getElementById('logout-button').classList.add('hidden')
+                        document.getElementById('register-button').classList.remove('hidden')
+                    }else if(response.message == 'User already log in'){
+                        document.getElementById('login-button').classList.add('hidden')
+                        document.getElementById('logout-button').classList.remove('hidden')
+                        document.getElementById('register-button').classList.add('hidden')
+                    }
+
                 },
                 error: function(error) {
-                    document.getElementById('login-button').classList.remove('hidden')
+                    document.getElementById('login-button').classList.add('hidden')
                     document.getElementById('logout-button').classList.add('hidden')
+                    document.getElementById('register-button').classList.remove('hidden')
                 }
             });
         });

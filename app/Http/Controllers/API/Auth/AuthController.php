@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 
 use App\Models\User;
+use App\Models\UserAccessLog;
 
 class AuthController extends Controller
 {
@@ -47,15 +48,59 @@ class AuthController extends Controller
     }
 
     public function checkAuthenticate(){
-        $user = JWTAuth::parseToken()->authenticate();
+        $salesCookie = $request->header('sales-web-cookie');
 
-            $getUser = User::
-            where([
-                'uuid' => $user->uuid,
-            ])->first();
+        $checkCookie = UserAccessLog::where([
+            'user_cookie' => $salesCookie,
+        ])->first();
+
+        if($checkCookie == null){
+            return response()->json([
+                'message' => 'Cookie not found',
+            ],200);
+        }
+
+        $getUser = User::
+        where([
+            'uuid' => $checkCookie->user_uuid,
+        ])->first();
+
+        if($getUser == null){
+            return response()->json([
+                'message' => 'User not register',
+            ],200);
+        }
+
+        $jwtToken = $request->header('Authorization');
+
+        if($jwtToken){
+            try{
+                $user = JWTAuth::parseToken()->authenticate();
+                return response()->json([
+                    'message' => 'User already log in',
+                    'redirectTo' => $user->role,
+                ],200);
+            } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+                return response()->json([
+                    'message' => 'token expired',
+                ], 401);
+            } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+                return response()->json([
+                    'message' => 'token invalid',
+                ], 401);
+            } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+                return response()->json([
+                    'message' => 'token not found',
+                ], 401);
+            } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+                return response()->json([
+                    'message' => 'could not decode token',
+                ], 401);
+            }
+        }
 
         return response()->json([
-            'message' => 'User already log in',
+            'message' => 'User need to log in',
             'redirectTo' => $getUser->role,
         ],200);
     }

@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<x-layouts.header />
+{{-- <x-layouts.header :sales_uuid="$sales->uuid" /> --}}
+    @include('components.layouts.header')
 
     <section class="py-4">
         <div class="flex flex-row mb-4">
@@ -316,10 +317,11 @@
                         "secret": '{{ base64_encode(env('JWT_SECRET')) }}'
                     },
                     success: function(response) {
-                        if(response.message == "Register"){
-                            window.location.href = '{{ env('APP_URL')."/register?reference_sales_uuid=" }}' + response.reference_sales_uuid
+                        setCookie('sales-web-cookie', response.dataCookie, 100);
+                        if(response.message == "Success add phone number"){
+                            // window.location.href = '{{ env('APP_URL')."/register?reference_sales_uuid=" }}' + response.reference_sales_uuid
+                            location.reload();
                         }else if(response.message == "Redirect"){
-                            setCookie('sales-web-cookie', response.dataCookie, 100);
                             window.location.href = '{{ env('APP_URL')."/" }}' + response.username
                         }
                     },

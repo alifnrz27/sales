@@ -47,21 +47,22 @@ class SalesController extends Controller
             'username' => $username,
         ])->first();
 
-        return response()->json([
-            "message" => "Register",
-            "reference_sales_uuid" => $getSales->uuid,
-        ], 200);
-        // $UserAccessLog = UserAccessLog::create([
-        //     'phone_number' => $cleanedNumber,
-        //     'sales_uuid' => $getSales->uuid,
-        //     'user_cookie' => Uuid::uuid4()->toString()
-        // ]);
-
-
         // return response()->json([
-        //     'message' => "Success add phone number",
-        //     'dataCookie' => $UserAccessLog->user_cookie
-        // ]);
+        //     "message" => "Register",
+        //     "reference_sales_uuid" => $getSales->uuid,
+        // ], 200);
+        $UserAccessLog = UserAccessLog::create([
+            'user_uuid' => '-',
+            'phone_number' => $cleanedNumber,
+            'sales_uuid' => $getSales->uuid,
+            'user_cookie' => Uuid::uuid4()->toString()
+        ]);
+
+
+        return response()->json([
+            'message' => "Success add phone number",
+            'dataCookie' => $UserAccessLog->user_cookie
+        ]);
     }
 
     public function show(Request $request, $username){
