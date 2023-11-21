@@ -312,6 +312,7 @@
                             });
                         },
                         error: function(error) {
+                            console.log(error)
                             if(error.responseJSON.message == 'Reference sales not found'){
                                 Swal.fire({
                                 icon: 'error',

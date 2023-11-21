@@ -40,26 +40,29 @@
                     "sales-web-cookie": Cookies.get('sales-web-cookie'),
                 },
                 success: function(response) {
-                    console.log(response)
-                    if(response.message == 'User need to log in'){
-                        document.getElementById('login-button').classList.remove('hidden')
-                        document.getElementById('logout-button').classList.add('hidden')
+                    if(response.message == 'User already log in'){
+                        document.getElementById('login-button').classList.add('hidden')
+                        document.getElementById('logout-button').classList.remove('hidden')
                         document.getElementById('register-button').classList.add('hidden')
                     }else if(response.message == 'Cookie not found'){
                         document.getElementById('login-button').classList.add('hidden')
                         document.getElementById('logout-button').classList.add('hidden')
-                        document.getElementById('register-button').classList.remove('hidden')
-                    }else if(response.message == 'User already log in'){
+                        document.getElementById('register-button').classList.add('hidden')
+                    }else if(response.message == 'User not register'){
                         document.getElementById('login-button').classList.add('hidden')
-                        document.getElementById('logout-button').classList.remove('hidden')
+                        document.getElementById('logout-button').classList.add('hidden')
+                        document.getElementById('register-button').classList.remove('hidden')
+                    }else if(response.message == 'User need to log in'){
+                        document.getElementById('login-button').classList.remove('hidden')
+                        document.getElementById('logout-button').classList.add('hidden')
                         document.getElementById('register-button').classList.add('hidden')
                     }
 
                 },
                 error: function(error) {
-                    document.getElementById('login-button').classList.add('hidden')
+                    document.getElementById('login-button').classList.remove('hidden')
                     document.getElementById('logout-button').classList.add('hidden')
-                    document.getElementById('register-button').classList.remove('hidden')
+                    document.getElementById('register-button').classList.add('hidden')
                 }
             });
         });
