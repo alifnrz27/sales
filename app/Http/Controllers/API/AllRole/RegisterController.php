@@ -91,6 +91,7 @@ class RegisterController extends Controller
             }
 
 
+            $userLog = UserAccessLog::where(['user_cookie' => $request->user_cookie])->first();
 
             $sales = User::
             create([
@@ -112,7 +113,7 @@ class RegisterController extends Controller
                 'sales_uuid' => $checkReferenceSales->uuid
             ]);
 
-            $userLog = UserAccessLog::where(['user_cookie' => $request->user_cookie])->first();
+
 
             return response()->json([
                 'message' => 'Redirect',
