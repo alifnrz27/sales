@@ -25,12 +25,42 @@ class SalesController extends Controller
             $cleanedNumber = '+62' . $cleanedNumber;
         }
 
-
-        $getUserLog = UserAccessLog::where([
-            'phone_number' => $cleanedNumber,
+        $getSales = User::where([
+            'whatsapp' => $cleanedNumber,
         ])->first();
 
+        $getUserLog = UserAccessLog::where([
+            'user_uuid' => $getSales->uuid,
+        ])->first();
+
+        if($getSales){
+            if($getUserLog){
+                $cookie = $getUserLog->user_cookie;
+            }else{
+                $UserAccessLog = UserAccessLog::create([
+                    'user_uuid' => '-',
+                    'phone_number' => $cleanedNumber,
+                    'sales_uuid' => $getSales->uuid,
+                    'user_cookie' => Uuid::uuid4()->toString()
+                ]);
+                $cookie = $UserAccessLog->user_cookie;
+            }
+            return response()->json([
+                "message" => "Redirect",
+                "username" => $getSales->username,
+                'dataCookie' => $cookie
+            ], 200);
+        }
+
         if($getUserLog){
+            if($getSales){
+                return response()->json([
+                    "message" => "Redirect",
+                    "username" => $getSales->username,
+                    'dataCookie' => $getUserLog->user_cookie
+                ], 200);
+            }
+
             $getSales = User::where([
                 'uuid' => $getUserLog->sales_uuid,
             ])->first();

@@ -98,10 +98,10 @@ class AuthController extends Controller
                 ], 401);
             }
         }
-
         return response()->json([
             'message' => 'User need to log in',
             'redirectTo' => $getUser->role,
         ],200);
+
     }
 }
