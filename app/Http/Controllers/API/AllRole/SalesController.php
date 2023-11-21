@@ -29,16 +29,16 @@ class SalesController extends Controller
             'whatsapp' => $cleanedNumber,
         ])->first();
 
-        $getUserLog = UserAccessLog::where([
-            'user_uuid' => $getSales->uuid,
-        ])->first();
-
         if($getSales){
+            $getUserLog = UserAccessLog::where([
+                'user_uuid' => $getSales->uuid,
+            ])->first();
+
             if($getUserLog){
                 $cookie = $getUserLog->user_cookie;
             }else{
                 $UserAccessLog = UserAccessLog::create([
-                    'user_uuid' => '-',
+                    'user_uuid' => $getSales->uuid,
                     'phone_number' => $cleanedNumber,
                     'sales_uuid' => $getSales->uuid,
                     'user_cookie' => Uuid::uuid4()->toString()
@@ -52,24 +52,24 @@ class SalesController extends Controller
             ], 200);
         }
 
-        if($getUserLog){
-            if($getSales){
-                return response()->json([
-                    "message" => "Redirect",
-                    "username" => $getSales->username,
-                    'dataCookie' => $getUserLog->user_cookie
-                ], 200);
-            }
+        $getUserLog = UserAccessLog::where([
+            'phone_number' => $cleanedNumber,
+        ])->first();
 
+        if($getUserLog){
             $getSales = User::where([
                 'uuid' => $getUserLog->sales_uuid,
             ])->first();
-
             return response()->json([
                 "message" => "Redirect",
                 "username" => $getSales->username,
                 'dataCookie' => $getUserLog->user_cookie
             ], 200);
+            // return response()->json([
+            //     "message" => "Redirect",
+            //     "username" => $getSales->username,
+            //     'dataCookie' => $getUserLog->user_cookie
+            // ], 200);
         }
 
 
@@ -77,10 +77,6 @@ class SalesController extends Controller
             'username' => $username,
         ])->first();
 
-        // return response()->json([
-        //     "message" => "Register",
-        //     "reference_sales_uuid" => $getSales->uuid,
-        // ], 200);
         $UserAccessLog = UserAccessLog::create([
             'user_uuid' => '-',
             'phone_number' => $cleanedNumber,

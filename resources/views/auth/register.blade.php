@@ -267,6 +267,26 @@
                     var url = new URL(currentUrl);
                     var referenceSalesUuid = url.searchParams.get("reference_sales_uuid");
                     formData.append('reference_sales_uuid', referenceSalesUuid);
+                    cookieValue = getCookie('sales-web-cookie');
+                    formData.append('user_cookie', cookieValue);
+
+                    if(!referenceSalesUuid){
+                        Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: "Reference sales not found"
+                            })
+                        return;
+                    }
+
+                    if(cookieValue == null){
+                        Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: "Cannot register"
+                            })
+                        return;
+                    }
 
                     $.ajax({
                         type: "POST",

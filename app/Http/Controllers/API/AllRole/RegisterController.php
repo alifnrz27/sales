@@ -25,6 +25,7 @@ class RegisterController extends Controller
                 'instagram' => 'required|string',
                 'facebook' => 'required|string',
                 'reference_sales_uuid' => 'required|string',
+                'user_cookie' => 'required|string',
             ];
 
             $validator = Validator::make($request->all(), $validate);
@@ -47,6 +48,14 @@ class RegisterController extends Controller
             }
 
             $cleanedNumber = preg_replace('/[^0-9]/', '', $request->whatsapp);
+            // Menambahkan awalan + jika belum dimulai dengan +
+            if (substr($cleanedNumber, 0, 1) !== '+') {
+                // Menghapus angka 0 di depan jika ada
+                $cleanedNumber = ltrim($cleanedNumber, '0');
+
+                // Menambahkan awalan +62
+                $cleanedNumber = '+62' . $cleanedNumber;
+            }
 
             $checkPhoneNumber = User::where([
                 'whatsapp' => $cleanedNumber,
@@ -81,14 +90,7 @@ class RegisterController extends Controller
                 ], 422);
             }
 
-            // Menambahkan awalan + jika belum dimulai dengan +
-            if (substr($cleanedNumber, 0, 1) !== '+') {
-                // Menghapus angka 0 di depan jika ada
-                $cleanedNumber = ltrim($cleanedNumber, '0');
 
-                // Menambahkan awalan +62
-                $cleanedNumber = '+62' . $cleanedNumber;
-            }
 
             $sales = User::
             create([
@@ -104,12 +106,13 @@ class RegisterController extends Controller
                 'reference_sales_uuid' => $checkReferenceSales->uuid,
                 ]);
 
-            $userLog = UserAccessLog::create([
+            $userLog = UserAccessLog::where(['user_cookie' => $request->user_cookie])->update([
                 'phone_number' => $cleanedNumber,
                 'user_uuid' => $sales->uuid,
-                'sales_uuid' => $checkReferenceSales->uuid,
-                'user_cookie' => Uuid::uuid4()->toString()
+                'sales_uuid' => $checkReferenceSales->uuid
             ]);
+
+            $userLog = UserAccessLog::where(['user_cookie' => $request->user_cookie])->first();
 
             return response()->json([
                 'message' => 'Redirect',
