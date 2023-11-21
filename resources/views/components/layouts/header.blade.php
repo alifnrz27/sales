@@ -15,7 +15,7 @@
                     </a>
                 </div>
                 <div id="register-button" class="hidden" style=" flex: 1 1 auto; text-align: right;">
-                    <a href="{{ route('register') }}?reference_sales_uuid={{ $sales->uuid }}" class="btn-profile" style="color: white; background-color: rgb(59 130 246 / var(--tw-bg-opacity));display: inline-flex; padding-left: 1rem; padding-right: 1rem;">
+                    <a href="{{ route('register') }}?reference_sales_uuid={{ $sales ? $sales->uuid : '' }}" class="btn-profile" style="color: white; background-color: rgb(59 130 246 / var(--tw-bg-opacity));display: inline-flex; padding-left: 1rem; padding-right: 1rem;">
                         <span>Register</span>
                     </a>
                 </div>
