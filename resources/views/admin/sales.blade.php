@@ -2,79 +2,83 @@
 
 @section('content')
 <x-layouts.header />
-    <div class="w-screen h-screen max-h-screen overflow-hidden bg-white" x-data="{form_create_sales:false, table_sales:true, open_confirm:false}">
-        <div id="table-sales" class="relative w-full max-h-screen overflow-auto h-full bg-white hide-scrollbar">
-            <div class="absolute left-0 lg:right-0 right-0">
-                <div class="mt-[30px] bg-white rounded-t-2xl p-6">
-                    <div style="line-height:22px" class="w-full h-8 text-[24px] font-bold flex items-center">
-                        Manage Sales
-                    </div>
-                    <div style="line-height: 22px" class="text-[16px] font-normal text-[#64748B]">
-                        In this page you can manage your sales
-                    </div>
-                    <div class="flex gap-2">
-                        <div onclick="showConfirmTable()" class="p-3 mt-4 w-fit cursor-pointer no-select rounded-lg flex items-center justify-center bg-green-400 text-white">
-                            Confirm Sales
+    <div class="w-screen h-screen max-h-screen overflow-hidden bg-white flex justify-center" x-data="{form_create_sales:false, table_sales:true, open_confirm:false}">
+        <div id="table-sales" class="w-full">
+            <div class="relative w-full max-h-screen overflow-auto h-full bg-white flex justify-center hide-scrollbar">
+                <div class="flex justify-center">
+                    <div class="mt-[30px] bg-white rounded-t-2xl p-6 w-full">
+                        <div style="line-height:22px" class="w-full h-8 text-[24px] font-bold flex items-center">
+                            Manage Sales
                         </div>
-                        <div onclick="hideShow('table-sales', 'form-create-sales')" class="p-3 mt-4 w-fit cursor-pointer no-select rounded-lg flex items-center justify-center bg-blue-400 text-white">
-                            Create
+                        <div style="line-height: 22px" class="text-[16px] font-normal text-[#64748B]">
+                            In this page you can manage your sales
                         </div>
-                    </div>
+                        <div class="flex gap-2">
+                            <div onclick="showConfirmTable()" class="p-3 mt-4 w-fit cursor-pointer no-select rounded-lg flex items-center justify-center bg-green-400 text-white">
+                                Confirm Sales
+                            </div>
+                            <div onclick="hideShow('table-sales', 'form-create-sales')" class="p-3 mt-4 w-fit cursor-pointer no-select rounded-lg flex items-center justify-center bg-blue-400 text-white">
+                                Create
+                            </div>
+                        </div>
 
-                    <div class="w-full mt-16">
-                        <table class="">
-                            <thead>
-                                <th class="w-[30px]">No</th>
-                                <th class="w-[150px]">Name</th>
-                                <th class="w-[100px]">Action</th>
-                            </thead>
-                            <tbody id="table-body-sales">
-                                @foreach ($sales as $index => $user)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td class="w-full flex items-center justify-center gap-2 mb-1">
-                                        <div onclick="showDetailSales('{{ $user->uuid }}')" class="p-3 w-fit text-white cursor-pointer no-select rounded-lg flex items-center justify-center bg-yellow-400">
-                                            Edit
-                                        </div>
-                                        <div onclick="deleteSales('{{ $user->uuid }}')" class="p-3 w-fit text-white cursor-pointer no-select rounded-lg flex items-center justify-center bg-red-600">
-                                            Delete
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                        <div class="w-full mt-16">
+                            <table class="">
+                                <thead>
+                                    <th class="w-[30px]">No</th>
+                                    <th class="w-[150px]">Name</th>
+                                    <th class="w-[100px]">Action</th>
+                                </thead>
+                                <tbody id="table-body-sales">
+                                    @foreach ($sales as $index => $user)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $user->name }}</td>
+                                        <td class="w-full flex items-center justify-center gap-2 mb-1">
+                                            <div onclick="showDetailSales('{{ $user->uuid }}')" class="p-3 w-fit text-white cursor-pointer no-select rounded-lg flex items-center justify-center bg-yellow-400">
+                                                Edit
+                                            </div>
+                                            <div onclick="deleteSales('{{ $user->uuid }}')" class="p-3 w-fit text-white cursor-pointer no-select rounded-lg flex items-center justify-center bg-red-600">
+                                                Delete
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="table-confirm-sales" class="relative w-full max-h-screen overflow-auto h-full bg-white hide-scrollbar">
-            <div class="absolute left-0 lg:right-0 right-0">
-                <div class="inline-block cursor-pointer" onclick="hideShow('table-confirm-sales', 'table-sales')">
-                    <div class="flex items-center mt-[40px]">
-                        <div style="font-weight: 600;" class="text-[16px] ml-3 mt-4 text-primary">
-                            Back
+        <div id="table-confirm-sales" class="hidden w-full">
+            <div class="relative w-full flex justify-center max-h-screen overflow-auto h-full bg-white hide-scrollbar">
+                <div class="">
+                    <div class="inline-block cursor-pointer" onclick="hideShow('table-confirm-sales', 'table-sales')">
+                        <div class="flex items-center mt-[40px]">
+                            <div style="font-weight: 600;" class="text-[16px] ml-3 mt-4 text-primary">
+                                Back
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="mt-[30px] bg-white rounded-t-2xl p-6">
-                    <div style="line-height:22px" class="w-full h-8 text-[24px] font-bold flex items-center">
-                        Confirm Sales
-                    </div>
+                    <div class="mt-[30px] bg-white rounded-t-2xl p-6">
+                        <div style="line-height:22px" class="w-full h-8 text-[24px] font-bold flex items-center">
+                            Confirm Sales
+                        </div>
 
-                    <div class="w-full mt-16">
-                        <table class="">
-                            <thead>
-                                <th class="w-[30px]">No</th>
-                                <th class="w-[150px]">Name</th>
-                                <th class="w-[100px]">Action</th>
-                            </thead>
-                            <tbody id="table-body-confirm-sales">
+                        <div class="w-full mt-16">
+                            <table class="">
+                                <thead>
+                                    <th class="w-[30px]">No</th>
+                                    <th class="w-[150px]">Name</th>
+                                    <th class="w-[100px]">Action</th>
+                                </thead>
+                                <tbody id="table-body-confirm-sales">
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -421,13 +425,14 @@
                         "Authorization": "Bearer " + Cookies.get('sales_access_token')
                     },
                     success: function(response) {
+                        hideShow('table-sales', 'table-confirm-sales');
                         // Loop melalui data response dan tambahkan baris baru ke dalam tabel
                         response.sales.forEach(function(user, index) {
                             // Buat elemen <tr> dan tambahkan ke dalam tabel
                             var row = $('<tr>');
 
                             // Tambahkan data ke dalam baris
-                            row.append('<td>' + (index + 1) + '</td>');
+                            row.append('<td>' +  (index + 1) + '</td>');
                             row.append('<td>' + user.name + '</td>');
 
                             // Buat elemen <td> untuk tombol Edit
@@ -444,7 +449,6 @@
                             // Tambahkan baris ke dalam tabel
                             $('#table-body-confirm-sales').append(row);
                         });
-                        hideShow('table-sales', 'table-confirm-sales');
                     },
                     error: function(error) {
                         //
